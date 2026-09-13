@@ -52,6 +52,25 @@
             filter: invert(1) grayscale(100%) brightness(200%);
         }
 
+        [data-bs-theme="dark"] .bg-secondary-subtle {
+            background-color: var(--bs-dark-bg-subtle) !important;
+        }
+
+        [data-bs-theme="dark"] .text-secondary,
+        [data-bs-theme="dark"] .text-black-50 {
+            color: var(--bs-secondary-color) !important;
+        }
+
+        [data-bs-theme="dark"] .form-control {
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+            border-color: var(--bs-border-color);
+        }
+
+        [data-bs-theme="dark"] .form-control::placeholder {
+            color: var(--bs-secondary-color);
+        }
+
       
         #demo {
             position: relative;
@@ -372,23 +391,6 @@
   
 
     <script>
-        const blockedOverlay = document.getElementById("blockedOverlay");
-        const blockedModalClose = document.getElementById("blockedModalClose");
-
-        function showBlockedModal() {
-            blockedOverlay.classList.add("show");
-        }
-
-        function hideBlockedModal() {
-            blockedOverlay.classList.remove("show");
-        }
-
-        blockedModalClose.addEventListener("click", hideBlockedModal);
-        blockedOverlay.addEventListener("click", (event) => {
-            if (event.target === blockedOverlay) hideBlockedModal();
-        });
-
-
         const contactForm = document.querySelector("form");
 
         contactForm.addEventListener("submit", (event) => {
@@ -406,10 +408,21 @@
         const page = document.documentElement;
         const button = document.getElementById("themeToggle");
 
+        const savedTheme = localStorage.getItem("theme") || "light";
+        page.setAttribute("data-bs-theme", savedTheme);
+        button.innerHTML = savedTheme === "dark"
+            ? '<i class="bi bi-sun-fill"></i>'
+            : '<i class="bi bi-moon-fill"></i>';
+        button.setAttribute(
+            "aria-label",
+            savedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        );
+
         button.addEventListener("click", () => {
             const isDark = page.getAttribute("data-bs-theme") === "dark";
 
             page.setAttribute("data-bs-theme", isDark ? "light" : "dark");
+            localStorage.setItem("theme", isDark ? "light" : "dark");
 
             button.innerHTML = isDark
                 ? '<i class="bi bi-moon-fill"></i>'
